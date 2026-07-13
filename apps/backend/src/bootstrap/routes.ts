@@ -5,7 +5,7 @@ import { systemRoutes } from '@modules/system/presentation/routes';
 import { metricsRoutes } from '@modules/metrics/presentation/routes';
 import { authRoutes } from '@modules/auth/presentation/routes';
 import { userRoutes } from '@modules/users/presentation/routes';
-import { organizationRoutes } from '@modules/organizations/presentation/routes';
+
 import { deviceRoutes } from '@modules/devices/presentation/routes';
 import { agentRoutes } from '@modules/agent/presentation/routes';
 import { policyRoutes } from '@modules/policies/presentation/routes';
@@ -28,8 +28,8 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
     async (v1) => {
       await v1.register(authRoutes, { prefix: '/auth' });
       await v1.register(userRoutes, { prefix: '/users' });
-      await v1.register(organizationRoutes, { prefix: '/organizations' });
-      await v1.register(deviceRoutes, { prefix: '/devices' });
+
+      // await v1.register(deviceRoutes, { prefix: '/devices' });
       await v1.register(agentRoutes, { prefix: '/agent' });
       await v1.register(policyRoutes, { prefix: '/policies' });
       await v1.register(notificationRoutes, { prefix: '/notifications' });
@@ -54,6 +54,15 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   // ── Organizations v2 routes (self-prefixed at /api/v1/organizations) ──────
   await registerOrganizationRoutes(app, {
     organizationsController: c.organizationsV2Controller as import('@modules/organizations/presentation/controllers/OrganizationsController').OrganizationsController,
+    authMiddlewareDeps: {
+      tokenService: c.jwtTokenService as import('@modules/identity/infrastructure/services/JwtTokenService').JwtTokenService,
+      sessionCache: c.sessionCache as import('@modules/identity/infrastructure/services/RedisSessionCache').RedisSessionCache,
+      userRepository: c.identityUserRepository as import('@modules/identity/domain/repositories/IUserRepository').IUserRepository,
+    },
+  });
+
+  // ── Devices module routes (self-prefixed) ─────────────────────────
+  await deviceRoutes(app, {
     authMiddlewareDeps: {
       tokenService: c.jwtTokenService as import('@modules/identity/infrastructure/services/JwtTokenService').JwtTokenService,
       sessionCache: c.sessionCache as import('@modules/identity/infrastructure/services/RedisSessionCache').RedisSessionCache,

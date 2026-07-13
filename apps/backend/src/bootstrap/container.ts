@@ -4,6 +4,7 @@ import {
   InjectionMode,
   asValue,
   asClass,
+  asFunction,
 } from 'awilix';
 import { PrismaClient } from '@prisma/client';
 import Redis from 'ioredis';
@@ -92,6 +93,14 @@ import { ListOrganizationMembersUseCase } from '@modules/organizations/applicati
 
 // Organizations Module — Presentation
 import { OrganizationsController as OrganizationsV2Controller } from '@modules/organizations/presentation/controllers/OrganizationsController';
+
+// Devices Module
+import { PrismaDeviceRepository } from '@modules/devices/infrastructure/repositories/PrismaDeviceRepository';
+import { PrismaDeviceAssignmentRepository } from '@modules/devices/infrastructure/repositories/PrismaDeviceAssignmentRepository';
+import { PrismaEnrollmentTokenRepository } from '@modules/devices/infrastructure/repositories/PrismaEnrollmentTokenRepository';
+import { AgentApiController } from '@modules/devices/presentation/controllers/AgentApiController';
+import { AdminDevicesController } from '@modules/devices/presentation/controllers/AdminDevicesController';
+import { requireDeviceAuth } from '@modules/devices/presentation/middlewares/requireDeviceAuth.middleware';
 
 /**
  * Awilix DI Container Bootstrap
@@ -214,6 +223,14 @@ export async function registerContainer(app: FastifyInstance): Promise<void> {
 
     // ── Organizations: Controller ────────────────────────────────────
     organizationsV2Controller: asClass(OrganizationsV2Controller).singleton(),
+
+    // ── Devices Module ───────────────────────────────────────────────
+    deviceRepository: asClass(PrismaDeviceRepository).singleton(),
+    deviceAssignmentRepository: asClass(PrismaDeviceAssignmentRepository).singleton(),
+    enrollmentTokenRepository: asClass(PrismaEnrollmentTokenRepository).singleton(),
+    agentApiController: asClass(AgentApiController).singleton(),
+    adminDevicesController: asClass(AdminDevicesController).singleton(),
+    requireDeviceAuth: asFunction(requireDeviceAuth).singleton(),
   });
 
   // Attach container to Fastify instance for request access

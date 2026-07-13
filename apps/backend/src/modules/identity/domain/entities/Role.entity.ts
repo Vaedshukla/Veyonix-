@@ -48,9 +48,9 @@ export class RoleEntity {
   }
 
   toPlainObject(): Omit<RoleProps, 'permissions'> & { permissionKeys: string[] } {
+    const { permissions, ...rest } = this.props;
     return {
-      ...this.props,
-      permissions: undefined as never,
+      ...rest,
       permissionKeys: this.getPermissionKeys(),
     };
   }

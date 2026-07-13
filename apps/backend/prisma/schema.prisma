@@ -73,6 +73,7 @@ model Organization {
   slug        String                   @unique
   type        OrganizationType
   isActive    Boolean                  @default(true)
+  version     Int                      @default(1)
   memberships OrganizationMembership[]
   roles       Role[]
   auditLogs   AuditLog[]
@@ -259,6 +260,86 @@ model PasswordReset {
 
   @@index([userId])
   @@map("password_resets")
+}
+
+// ================================================================
+// DEVICES & ENDPOINT MANAGEMENT
+// ================================================================
+
+enum DeviceStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  QUARANTINED
+  REVOKED
+  DECOMMISSIONED
+}
+
+enum EnrollmentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum EnrollmentMethod {
+  MANUAL
+  GPO
+  INTUNE
+  JAMF
+  OTHER
+}
+
+model Device {
+  id               String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId   String           @db.Uuid
+  hostname         String
+  serialNumber     String?
+  os               String
+  architecture     String
+  status           DeviceStatus     @default(PENDING)
+  publicKey        String?
+  deviceSecretHash String
+  agentVersion     String
+  enrollmentStatus EnrollmentStatus @default(PENDING)
+  enrollmentMethod EnrollmentMethod @default(MANUAL)
+  lastSeenAt       DateTime         @default(now())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  deletedAt        DateTime?
+
+  assignments      DeviceAssignment[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("devices")
+}
+
+model DeviceAssignment {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deviceId   String    @db.Uuid
+  device     Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  userId     String?   @db.Uuid
+  assignedAt DateTime  @default(now())
+  assignedBy String    @db.Uuid
+  removedAt  DateTime?
+
+  @@index([deviceId])
+  @@index([userId])
+  @@map("device_assignments")
+}
+
+model EnrollmentToken {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String   @db.Uuid
+  tokenHash      String   @unique
+  expiresAt      DateTime
+  maxUses        Int      @default(1)
+  uses           Int      @default(0)
+  createdBy      String   @db.Uuid
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId])
+  @@map("enrollment_tokens")
 }
 
 // ================================================================
