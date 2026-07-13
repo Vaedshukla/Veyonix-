@@ -18,6 +18,17 @@ import { PrismaPoliciesRepository } from '@modules/policies/infrastructure/prism
 import { PrismaAnalyticsRepository } from '@modules/analytics/infrastructure/prisma/analytics.prisma.repository';
 import { PrismaReportsRepository } from '@modules/reports/infrastructure/prisma/reports.prisma.repository';
 
+// Policy Module Components
+import { PrismaPolicyRepository } from '@modules/policies/infrastructure/prisma/PrismaPolicyRepository';
+import { PrismaPolicyAssignmentRepository } from '@modules/policies/infrastructure/prisma/PrismaPolicyAssignmentRepository';
+import { PrismaCompiledPolicyRepository } from '@modules/policies/infrastructure/prisma/PrismaCompiledPolicyRepository';
+import { RedisPolicyCache } from '@modules/policies/infrastructure/redis/RedisPolicyCache';
+import { PolicyUpdateProducer } from '@modules/policies/infrastructure/jobs/PolicyUpdateProducer';
+import { PolicyCompilationWorker } from '@modules/policies/infrastructure/jobs/PolicyCompilationWorker';
+import { PolicyNotificationPublisher } from '@modules/policies/infrastructure/websockets/PolicyNotificationPublisher';
+import { AdminPolicyController } from '@modules/policies/presentation/controllers/AdminPolicyController';
+import { AgentPolicyController } from '@modules/policies/presentation/controllers/AgentPolicyController';
+
 // Infrastructure Providers
 import { Argon2HashingProvider } from '@modules/auth/infrastructure/hashing/argon2.adapter';
 import { JwtTokenProvider } from '@modules/auth/infrastructure/jwt/jwt.adapter';
@@ -151,6 +162,18 @@ export async function registerContainer(app: FastifyInstance): Promise<void> {
     usersRepository: asClass(PrismaUsersRepository).singleton(),
     devicesRepository: asClass(PrismaDevicesRepository).singleton(),
     policiesRepository: asClass(PrismaPoliciesRepository).singleton(),
+    
+    // Policy Module V2
+    policyRepository: asClass(PrismaPolicyRepository).singleton(),
+    policyAssignmentRepository: asClass(PrismaPolicyAssignmentRepository).singleton(),
+    compiledPolicyRepository: asClass(PrismaCompiledPolicyRepository).singleton(),
+    redisPolicyCache: asClass(RedisPolicyCache).singleton(),
+    policyUpdateProducer: asClass(PolicyUpdateProducer).singleton(),
+    policyCompilationWorker: asClass(PolicyCompilationWorker).singleton(),
+    policyNotificationPublisher: asClass(PolicyNotificationPublisher).singleton(),
+    adminPolicyController: asClass(AdminPolicyController).singleton(),
+    agentPolicyController: asClass(AgentPolicyController).singleton(),
+
     analyticsRepository: asClass(PrismaAnalyticsRepository).singleton(),
     reportsRepository: asClass(PrismaReportsRepository).singleton(),
 

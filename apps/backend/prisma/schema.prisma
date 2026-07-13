@@ -77,6 +77,7 @@ model Organization {
   memberships OrganizationMembership[]
   roles       Role[]
   auditLogs   AuditLog[]
+  policies    Policy[]
   createdAt   DateTime                 @default(now())
   updatedAt   DateTime                 @updatedAt
   deletedAt   DateTime?
@@ -308,6 +309,7 @@ model Device {
   deletedAt        DateTime?
 
   assignments      DeviceAssignment[]
+  compiledPolicies CompiledPolicy[]
 
   @@index([organizationId])
   @@index([status])
@@ -369,4 +371,74 @@ model AuditLog {
   @@index([action])
   @@index([correlationId])
   @@map("audit_logs")
+}
+
+// ================================================================
+// POLICIES
+// ================================================================
+
+enum PolicyTargetType {
+  DEVICE
+  USER
+  GROUP
+  ORGANIZATION
+}
+
+model Policy {
+  id             String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String             @db.Uuid
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  description    String?
+  category       String
+  status         String             @default("DRAFT")
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  deletedAt      DateTime?
+  versions       PolicyVersion[]
+  assignments    PolicyAssignment[]
+
+  @@index([organizationId])
+  @@map("policies")
+}
+
+model PolicyVersion {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  policyId      String   @db.Uuid
+  policy        Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  versionNumber Int
+  configuration Json
+  createdBy     String   @db.Uuid
+  createdAt     DateTime @default(now())
+
+  @@unique([policyId, versionNumber])
+  @@map("policy_versions")
+}
+
+model PolicyAssignment {
+  id         String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  policyId   String           @db.Uuid
+  policy     Policy           @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  targetType PolicyTargetType
+  targetId   String           @db.Uuid
+  priority   Int              @default(0)
+  assignedBy String           @db.Uuid
+  createdAt  DateTime         @default(now())
+
+  @@index([policyId])
+  @@index([targetType, targetId])
+  @@map("policy_assignments")
+}
+
+model CompiledPolicy {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  deviceId      String   @db.Uuid
+  device        Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  policyHash    String
+  configuration Json
+  version       Int
+  compiledAt    DateTime @default(now())
+
+  @@index([deviceId])
+  @@map("compiled_policies")
 }
