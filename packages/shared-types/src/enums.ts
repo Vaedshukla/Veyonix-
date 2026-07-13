@@ -1,0 +1,187 @@
+// ============================================================
+// Veyonix Shared Enums
+// Shared across backend, frontend, desktop-agent, and SDKs
+// ============================================================
+
+export enum UserRole {
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  SCHOOL_ADMIN = 'SCHOOL_ADMIN',
+  PARENT = 'PARENT',
+  STUDENT = 'STUDENT',
+  SUPPORT = 'SUPPORT',
+}
+
+export enum OrganizationType {
+  SCHOOL_DISTRICT = 'SCHOOL_DISTRICT',
+  SCHOOL = 'SCHOOL',
+  FAMILY = 'FAMILY',
+  ENTERPRISE = 'ENTERPRISE',
+}
+
+export enum DevicePlatform {
+  WINDOWS = 'WINDOWS',
+  MACOS = 'MACOS',
+  CHROMEOS = 'CHROMEOS',
+  LINUX = 'LINUX',
+  IOS = 'IOS',
+  ANDROID = 'ANDROID',
+}
+
+export enum DeviceStatus {
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
+  LOCKED = 'LOCKED',
+  QUARANTINED = 'QUARANTINED',
+  PENDING_ENROLLMENT = 'PENDING_ENROLLMENT',
+}
+
+export enum CommandType {
+  LOCK = 'LOCK',
+  UNLOCK = 'UNLOCK',
+  SYNC_POLICY = 'SYNC_POLICY',
+  SCREENSHOT = 'SCREENSHOT',
+  RESTART = 'RESTART',
+  SHUTDOWN = 'SHUTDOWN',
+  ENABLE_FOCUS_MODE = 'ENABLE_FOCUS_MODE',
+  DISABLE_FOCUS_MODE = 'DISABLE_FOCUS_MODE',
+  BLOCK_INTERNET = 'BLOCK_INTERNET',
+  UNBLOCK_INTERNET = 'UNBLOCK_INTERNET',
+  UPDATE_AGENT = 'UPDATE_AGENT',
+}
+
+export enum CommandStatus {
+  PENDING = 'PENDING',
+  SENT = 'SENT',
+  ACKNOWLEDGED = 'ACKNOWLEDGED',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+  EXPIRED = 'EXPIRED',
+}
+
+export enum PolicyType {
+  WEB_FILTER = 'WEB_FILTER',
+  APP_FILTER = 'APP_FILTER',
+  TIME_RESTRICTION = 'TIME_RESTRICTION',
+  CONTENT_FILTER = 'CONTENT_FILTER',
+  NETWORK = 'NETWORK',
+  FOCUS_MODE = 'FOCUS_MODE',
+}
+
+export enum PolicyAction {
+  BLOCK = 'BLOCK',
+  WARN = 'WARN',
+  ALLOW = 'ALLOW',
+  LOG = 'LOG',
+  REDIRECT = 'REDIRECT',
+}
+
+export enum PolicyAssignmentTargetType {
+  USER = 'USER',
+  DEVICE = 'DEVICE',
+  CLASSROOM = 'CLASSROOM',
+  SCHOOL = 'SCHOOL',
+  ORGANIZATION = 'ORGANIZATION',
+  STUDENT_GROUP = 'STUDENT_GROUP',
+}
+
+export enum RuleType {
+  DOMAIN = 'DOMAIN',
+  URL_PATTERN = 'URL_PATTERN',
+  APP_NAME = 'APP_NAME',
+  APP_CATEGORY = 'APP_CATEGORY',
+  KEYWORD = 'KEYWORD',
+  CONTENT_CATEGORY = 'CONTENT_CATEGORY',
+  TIME_RANGE = 'TIME_RANGE',
+  PROCESS_NAME = 'PROCESS_NAME',
+}
+
+export enum NotificationChannel {
+  EMAIL = 'EMAIL',
+  PUSH = 'PUSH',
+  DESKTOP = 'DESKTOP',
+  WEBSOCKET = 'WEBSOCKET',
+  SMS = 'SMS',
+}
+
+export enum AlertSeverity {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
+}
+
+export enum AlertType {
+  POLICY_VIOLATION = 'POLICY_VIOLATION',
+  EXTENDED_SESSION = 'EXTENDED_SESSION',
+  SUSPICIOUS_APP = 'SUSPICIOUS_APP',
+  DEVICE_OFFLINE = 'DEVICE_OFFLINE',
+  BLOCKED_CONTENT = 'BLOCKED_CONTENT',
+  FOCUS_INTERRUPTED = 'FOCUS_INTERRUPTED',
+  UNKNOWN_DEVICE = 'UNKNOWN_DEVICE',
+  AGENT_UPDATE_AVAILABLE = 'AGENT_UPDATE_AVAILABLE',
+}
+
+export enum SubscriptionTier {
+  FREE = 'FREE',
+  STARTER = 'STARTER',
+  PROFESSIONAL = 'PROFESSIONAL',
+  ENTERPRISE = 'ENTERPRISE',
+}
+
+export enum SubscriptionStatus {
+  ACTIVE = 'ACTIVE',
+  TRIALING = 'TRIALING',
+  PAST_DUE = 'PAST_DUE',
+  CANCELED = 'CANCELED',
+  UNPAID = 'UNPAID',
+}
+
+export enum TelemetryType {
+  CPU = 'CPU',
+  MEMORY = 'MEMORY',
+  DISK = 'DISK',
+  NETWORK = 'NETWORK',
+  BATTERY = 'BATTERY',
+  GPU = 'GPU',
+}
+
+export enum AuditAction {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  LOGIN = 'LOGIN',
+  LOGOUT = 'LOGOUT',
+  FAILED_LOGIN = 'FAILED_LOGIN',
+  PASSWORD_CHANGE = 'PASSWORD_CHANGE',
+  POLICY_ASSIGN = 'POLICY_ASSIGN',
+  DEVICE_COMMAND = 'DEVICE_COMMAND',
+  ROLE_CHANGE = 'ROLE_CHANGE',
+  PERMISSION_CHANGE = 'PERMISSION_CHANGE',
+  EXPORT = 'EXPORT',
+  API_KEY_CREATE = 'API_KEY_CREATE',
+  API_KEY_REVOKE = 'API_KEY_REVOKE',
+}
+
+export enum WebhookEvent {
+  DEVICE_ENROLLED = 'device.enrolled',
+  DEVICE_ONLINE = 'device.online',
+  DEVICE_OFFLINE = 'device.offline',
+  ALERT_CREATED = 'alert.created',
+  POLICY_UPDATED = 'policy.updated',
+  USER_CREATED = 'user.created',
+  SUBSCRIPTION_EXPIRED = 'subscription.expired',
+}
+
+export enum StorageProvider {
+  LOCAL = 'LOCAL',
+  S3 = 'S3',
+  CLOUDFLARE_R2 = 'CLOUDFLARE_R2',
+  AZURE_BLOB = 'AZURE_BLOB',
+}
+
+export enum MailProvider {
+  RESEND = 'RESEND',
+  SES = 'SES',
+  SMTP = 'SMTP',
+  SENDGRID = 'SENDGRID',
+}

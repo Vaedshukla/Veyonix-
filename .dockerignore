@@ -1,0 +1,15 @@
+node_modules
+.turbo
+dist
+build
+.env
+.env.*
+!.env.example
+*.log
+.git
+.DS_Store
+coverage
+pgdata
+redisdata
+uploads
+*.tsbuildinfo

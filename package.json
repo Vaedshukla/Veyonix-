@@ -1,0 +1,40 @@
+{
+  "name": "veyonix",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.10.0",
+  "description": "Veyonix — AI-powered digital wellbeing and internet governance platform",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "backend:dev": "turbo run dev --filter=@veyonix/backend",
+    "frontend:dev": "turbo run dev --filter=@veyonix/frontend",
+    "backend:build": "turbo run build --filter=@veyonix/backend",
+    "db:generate": "pnpm --filter=@veyonix/backend prisma:generate",
+    "db:migrate": "pnpm --filter=@veyonix/backend prisma migrate dev",
+    "db:studio": "pnpm --filter=@veyonix/backend prisma studio",
+    "db:reset": "pnpm --filter=@veyonix/backend prisma migrate reset",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
+    "turbo": "^2.0.0",
+    "prettier": "^3.2.0"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": ["prettier --write", "eslint --fix"],
+    "**/*.{json,md,yaml,yml}": ["prettier --write"]
+  }
+}

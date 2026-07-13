@@ -1,0 +1,251 @@
+@import 'tailwindcss';
+
+/* ============================================
+   PROJECT ALPHA - DARK ENTERPRISE THEME
+   Complete black and dark grey color system
+   ============================================ */
+
+@theme {
+  /* ===== DARK FOUNDATION ===== */
+  /* Used for: backgrounds, structure, layers */
+  
+  --color-dark-950: #000000;      /* Pure black - deepest bg */
+  --color-dark-900: #0a0a0a;      /* Near black - main bg */
+  --color-dark-850: #121212;      /* Card bg */
+  --color-dark-800: #1a1a1a;      /* Elevated elements */
+  --color-dark-700: #242424;      /* Subtle elevation */
+  --color-dark-600: #2e2e2e;      /* Borders dark */
+  --color-dark-500: #3a3a3a;      /* Interactive elements */
+  --color-dark-400: #4a4a4a;      /* Hover states */
+  --color-dark-300: #5a5a5a;      /* Muted UI */
+  --color-dark-200: #707070;      /* Secondary text */
+  --color-dark-100: #8a8a8a;      /* Tertiary text */
+  --color-dark-50: #a0a0a0;       /* Muted text */
+
+  /* ===== LIGHT TEXT (For dark backgrounds) ===== */
+  
+  --color-text-primary: #ffffff;    /* Primary text - brightest */
+  --color-text-secondary: #b0b0b0;  /* Secondary text */
+  --color-text-tertiary: #808080;   /* Muted text */
+  --color-text-disabled: #606060;   /* Disabled text */
+
+  /* ===== PRIMARY (Deep Blue-Gray for dark mode) ===== */
+  /* Used for: primary actions, focus states */
+  
+  --color-primary-50: #e6f0f8;
+  --color-primary-100: #cce1f1;
+  --color-primary-200: #99c3e3;
+  --color-primary-300: #66a5d5;
+  --color-primary-400: #5094cc;
+  --color-primary-500: #4a7ba7;
+  --color-primary-600: #3d6489;
+  --color-primary-700: #2f4d6b;
+  --color-primary-800: #22364d;
+  --color-primary-900: #14202f;
+
+  /* ===== SECONDARY (Muted Teal for dark mode) ===== */
+  
+  --color-secondary-50: #e6f5f5;
+  --color-secondary-100: #ccebeb;
+  --color-secondary-200: #99d7d7;
+  --color-secondary-300: #66c3c3;
+  --color-secondary-400: #4db3b3;
+  --color-secondary-500: #3d9999;
+  --color-secondary-600: #327d7d;
+  --color-secondary-700: #266161;
+  --color-secondary-800: #1a4545;
+  --color-secondary-900: #0e2929;
+
+  /* ===== SUCCESS (Muted Green for dark backgrounds) ===== */
+  /* Used for: allowed, active, online, positive states */
+  
+  --color-success-50: #e8f5ee;
+  --color-success-100: #d1ebdd;
+  --color-success-200: #a3d7bb;
+  --color-success-300: #75c399;
+  --color-success-400: #5ab684;
+  --color-success-500: #48a36e;
+  --color-success-600: #3a865a;
+  --color-success-700: #2c6946;
+  --color-success-800: #1e4c32;
+  --color-success-900: #0f2f1e;
+
+  /* ===== WARNING (Amber for dark backgrounds) ===== */
+  /* Used for: warnings, attention needed */
+  
+  --color-warning-50: #fef8e6;
+  --color-warning-100: #fdf1cc;
+  --color-warning-200: #fbe399;
+  --color-warning-300: #f9d566;
+  --color-warning-400: #f7cb47;
+  --color-warning-500: #ddb33d;
+  --color-warning-600: #b89432;
+  --color-warning-700: #937527;
+  --color-warning-800: #6e561c;
+  --color-warning-900: #493711;
+
+  /* ===== ERROR (Controlled Red for dark backgrounds) ===== */
+  /* Used for: blocked, errors, critical alerts */
+  
+  --color-error-50: #fee6e6;
+  --color-error-100: #fdcccc;
+  --color-error-200: #fb9999;
+  --color-error-300: #f96666;
+  --color-error-400: #f74747;
+  --color-error-500: #dd3d3d;
+  --color-error-600: #b83232;
+  --color-error-700: #932727;
+  --color-error-800: #6e1c1c;
+  --color-error-900: #491111;
+
+  /* ===== INFO (Blue-Gray for dark backgrounds) ===== */
+  
+  --color-info-50: #e8eef5;
+  --color-info-100: #d1ddeb;
+  --color-info-200: #a3bbd7;
+  --color-info-300: #7599c3;
+  --color-info-400: #5a84b6;
+  --color-info-500: #4a6f9e;
+  --color-info-600: #3d5c82;
+  --color-info-700: #2f4966;
+  --color-info-800: #22364a;
+  --color-info-900: #14232e;
+}
+
+/* ============================================
+   TYPOGRAPHY HIERARCHY (DARK MODE)
+   ============================================ */
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--color-text-secondary);
+  background-color: var(--color-dark-900);
+}
+
+/* Primary Text - Body content */
+p, span, div {
+  color: var(--color-text-secondary);
+}
+
+/* Headings - Bright white for emphasis */
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text-primary);
+}
+
+h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+h5, h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+/* Small text - Captions, metadata */
+small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-tertiary);
+}
+
+/* Links */
+a {
+  color: var(--color-primary-400);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--color-primary-300);
+}
+
+/* Code */
+code, pre {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+/* ============================================
+   UTILITY ANIMATIONS
+   ============================================ */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
