@@ -1,0 +1,22 @@
+# Rust build artifacts
+target/
+
+# Cargo lock is committed for binaries, not for libraries
+# Keep Cargo.lock committed (it's a binary crate workspace)
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local agent data (never commit device secrets or certs)
+*.db
+*.db-lock
+veyonix_agent.db*
+agent_data/
+logs/
