@@ -1,0 +1,13 @@
+[package]
+name = "veyonix-config"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+tracing.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+config = "0.14"
+validator.workspace = true
+chrono.workspace = true

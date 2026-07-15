@@ -1,0 +1,33 @@
+# Veyonix Agent — Default Configuration
+# All values here are the lowest-priority defaults.
+# Override via a user config file or VEYONIX_* environment variables.
+
+[server]
+base_url       = "https://api.veyonix.io"
+ws_url         = "wss://api.veyonix.io/ws"
+tls_verify     = true
+
+[logging]
+level            = "info"
+log_dir          = "/var/log/veyonix"
+max_file_size_mb = 100
+json_output      = false
+
+[enrollment]
+token       = ""
+max_retries = 5
+
+[heartbeat]
+interval_secs = 30
+
+[policy]
+sync_interval_secs  = 60
+max_versions_cached = 5
+
+[telemetry]
+flush_interval_secs   = 60
+max_queue_size        = 10000
+collect_interval_secs = 10
+
+[storage]
+data_dir = "/var/lib/veyonix"

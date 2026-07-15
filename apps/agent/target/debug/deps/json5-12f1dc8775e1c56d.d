@@ -1,0 +1,11 @@
+C:\Users\Vaed Shukla\Desktop\Veyonix\Veyonix-\apps\agent\target\debug\deps\json5-12f1dc8775e1c56d.d: C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\lib.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\de.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\error.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\ser.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src/json5.pest
+
+C:\Users\Vaed Shukla\Desktop\Veyonix\Veyonix-\apps\agent\target\debug\deps\libjson5-12f1dc8775e1c56d.rlib: C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\lib.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\de.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\error.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\ser.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src/json5.pest
+
+C:\Users\Vaed Shukla\Desktop\Veyonix\Veyonix-\apps\agent\target\debug\deps\libjson5-12f1dc8775e1c56d.rmeta: C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\lib.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\de.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\error.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\ser.rs C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src/json5.pest
+
+C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\lib.rs:
+C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\de.rs:
+C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\error.rs:
+C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src\ser.rs:
+C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\json5-0.4.1\src/json5.pest:

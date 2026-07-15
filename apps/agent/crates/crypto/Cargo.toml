@@ -1,0 +1,16 @@
+[package]
+name = "veyonix-crypto"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ring = "0.17"
+p256 = { version = "0.13", features = ["ecdsa", "pkcs8", "pem"] }
+aes-gcm = "0.10"
+hkdf = "0.12"
+sha2 = "0.10"
+rand = "0.8"
+zeroize = { version = "1", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+thiserror = "1"
+hex = "0.4"

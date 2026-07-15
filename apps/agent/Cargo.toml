@@ -1,0 +1,55 @@
+[workspace]
+resolver = "2"
+members = [
+  "crates/veyonix-agent",
+  "crates/logging",
+  "crates/config",
+  "crates/core",
+  "crates/crypto",
+  "crates/storage",
+  "crates/network",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Veyonix Engineering"]
+license = "UNLICENSED"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+[workspace.dependencies]
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "chrono"] }
+tracing-appender = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+anyhow = "1"
+config = "0.14"
+validator = { version = "0.18", features = ["derive"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+ring = "0.17"
+aes-gcm = "0.10"
+hkdf = "0.12"
+sha2 = "0.10"
+rand = "0.8"
+zeroize = { version = "1", features = ["derive"] }
+hex = "0.4"
+sled = "0.34"
+clap = { version = "4", features = ["derive"] }
+
+# Internal crate cross-references
+veyonix-logging = { path = "crates/logging" }
+veyonix-config  = { path = "crates/config" }
+veyonix-core    = { path = "crates/core" }
+veyonix-crypto  = { path = "crates/crypto" }
+veyonix-storage = { path = "crates/storage" }
+veyonix-network = { path = "crates/network" }

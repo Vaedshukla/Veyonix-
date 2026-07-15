@@ -1,0 +1,17 @@
+[package]
+name = "veyonix-agent"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "veyonix-agent"
+path = "src/main.rs"
+
+[dependencies]
+tokio.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+clap = { version = "4", features = ["derive"] }
+veyonix-config = { path = "../config" }
+veyonix-logging = { path = "../logging" }
+veyonix-core = { path = "../core" }

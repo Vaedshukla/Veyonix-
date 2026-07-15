@@ -1,0 +1,7 @@
+C:\Users\Vaed Shukla\Desktop\Veyonix\Veyonix-\apps\agent\target\debug\deps\opaque_debug-b7b8a010439b9583.d: C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\opaque-debug-0.3.1\src\lib.rs
+
+C:\Users\Vaed Shukla\Desktop\Veyonix\Veyonix-\apps\agent\target\debug\deps\libopaque_debug-b7b8a010439b9583.rlib: C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\opaque-debug-0.3.1\src\lib.rs
+
+C:\Users\Vaed Shukla\Desktop\Veyonix\Veyonix-\apps\agent\target\debug\deps\libopaque_debug-b7b8a010439b9583.rmeta: C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\opaque-debug-0.3.1\src\lib.rs
+
+C:\Users\Vaed\ Shukla\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\opaque-debug-0.3.1\src\lib.rs:

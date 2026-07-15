@@ -1,0 +1,1 @@
+C:\Users\Vaed\ Shukla\Desktop\Veyonix\Veyonix-\apps\agent\target\debug\libveyonix_core.rlib: C:\Users\Vaed\ Shukla\Desktop\Veyonix\Veyonix-\apps\agent\crates\config\src\lib.rs C:\Users\Vaed\ Shukla\Desktop\Veyonix\Veyonix-\apps\agent\crates\core\src\lib.rs C:\Users\Vaed\ Shukla\Desktop\Veyonix\Veyonix-\apps\agent\crates\logging\src\lib.rs

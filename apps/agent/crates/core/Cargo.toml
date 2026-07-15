@@ -1,0 +1,13 @@
+[package]
+name = "veyonix-core"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+tokio.workspace = true
+tracing.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+veyonix-config = { path = "../config" }
+veyonix-logging = { path = "../logging" }
