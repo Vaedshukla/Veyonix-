@@ -8,6 +8,9 @@ members = [
   "crates/crypto",
   "crates/storage",
   "crates/network",
+  "crates/policy",
+  "crates/websocket",
+  "crates/commands",
 ]
 
 [workspace.package]
@@ -45,6 +48,8 @@ zeroize = { version = "1", features = ["derive"] }
 hex = "0.4"
 sled = "0.34"
 clap = { version = "4", features = ["derive"] }
+tokio-tungstenite = { version = "0.24", features = ["rustls-tls-native-roots"] }
+futures-util = "0.3"
 
 # Internal crate cross-references
 veyonix-logging = { path = "crates/logging" }
@@ -53,3 +58,6 @@ veyonix-core    = { path = "crates/core" }
 veyonix-crypto  = { path = "crates/crypto" }
 veyonix-storage = { path = "crates/storage" }
 veyonix-network = { path = "crates/network" }
+veyonix-policy  = { path = "crates/policy" }
+veyonix-websocket = { path = "crates/websocket" }
+veyonix-commands = { path = "crates/commands" }
