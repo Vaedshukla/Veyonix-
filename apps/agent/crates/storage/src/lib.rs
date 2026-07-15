@@ -175,6 +175,22 @@ impl StorageEngine {
         self.db.remove(Self::composite_key(namespace, key))?;
         Ok(())
     }
+
+    /// Scan all keys within a namespace.
+    pub fn scan_keys(&self, namespace: &str) -> Result<Vec<String>, StorageError> {
+        let mut prefix = namespace.as_bytes().to_vec();
+        prefix.push(0x00);
+
+        let mut keys = Vec::new();
+        for kv in self.db.scan_prefix(&prefix) {
+            let (k, _) = kv?;
+            // Strip prefix length to extract just the key part
+            if let Ok(key_str) = std::str::from_utf8(&k[prefix.len()..]) {
+                keys.push(key_str.to_string());
+            }
+        }
+        Ok(keys)
+    }
 }
 
 // ---------------------------------------------------------------------------
