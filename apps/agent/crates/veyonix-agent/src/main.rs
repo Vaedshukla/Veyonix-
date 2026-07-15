@@ -12,6 +12,8 @@
 
 use std::path::PathBuf;
 
+pub mod service;
+
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 use tracing::info;
@@ -52,13 +54,17 @@ enum Commands {
 
 /// Arguments for the `run` subcommand.
 #[derive(Debug, clap::Args)]
-struct RunArgs {
+pub struct RunArgs {
     /// Path to the agent configuration file.
     ///
     /// If omitted, defaults are loaded from the built-in `agent.default.toml`
     /// and `VEYONIX_*` environment variables.
     #[arg(short, long, value_name = "FILE")]
-    config: Option<PathBuf>,
+    pub config: Option<PathBuf>,
+
+    /// Run as a Windows Service.
+    #[arg(long)]
+    pub service: bool,
 }
 
 // ─── Entry-point ─────────────────────────────────────────────────────────────
@@ -78,6 +84,10 @@ async fn main() -> Result<()> {
 
 /// `run` subcommand — full agent lifecycle.
 async fn cmd_run(args: RunArgs) -> Result<()> {
+    if args.service {
+        return service::run_as_service(args);
+    }
+
     // 1. Load configuration (defaults → optional file → env vars).
     let cfg = config::load(args.config.as_deref())
         .context("failed to load agent configuration")?;

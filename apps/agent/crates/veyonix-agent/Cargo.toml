@@ -15,3 +15,15 @@ clap = { version = "4", features = ["derive"] }
 veyonix-config = { path = "../config" }
 veyonix-logging = { path = "../logging" }
 veyonix-core = { path = "../core" }
+veyonix-crypto = { path = "../crypto" }
+veyonix-storage = { path = "../storage" }
+veyonix-network = { path = "../network" }
+veyonix-policy = { path = "../policy" }
+veyonix-websocket = { path = "../websocket" }
+veyonix-commands = { path = "../commands" }
+veyonix-telemetry = { path = "../telemetry" }
+veyonix-heartbeat = { path = "../heartbeat" }
+veyonix-scheduler = { path = "../scheduler" }
+
+[target.'cfg(windows)'.dependencies]
+windows-service = "0.7"
