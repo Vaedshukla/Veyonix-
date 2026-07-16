@@ -5,6 +5,7 @@ use veyonix_network::ApiClient;
 use crate::error::TelemetryError;
 use crate::queue::TelemetryQueue;
 
+#[derive(Clone)]
 pub struct TelemetryFlusher {
     queue: Arc<TelemetryQueue>,
     api: Arc<ApiClient>,

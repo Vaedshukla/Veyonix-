@@ -13,10 +13,11 @@
 use std::path::PathBuf;
 
 pub mod service;
+pub mod orchestrator;
 
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
-use tracing::info;
+use tracing::{error, info};
 
 use veyonix_config as config;
 use veyonix_core::AgentContext;
@@ -25,6 +26,7 @@ use veyonix_enforcement::EnforcementEngine;
 use veyonix_enforcement_website::WebsiteFilterEnforcer;
 use veyonix_enforcement_app::AppBlockEnforcer;
 use veyonix_enforcement_usb::UsbBlockEnforcer;
+use veyonix_enforcement_focus::FocusModeEnforcer;
 
 // ─── Version ─────────────────────────────────────────────────────────────────
 
@@ -116,37 +118,74 @@ async fn cmd_run(args: RunArgs) -> Result<()> {
     );
 
     // 4. Build and register all enforcement modules.
-    //
-    //    ┌────────────────────────────────────────────────┐
-    //    │  EnforcementEngine                              │
-    //    │  ├── WebsiteFilterEnforcer  (hosts file)        │
-    //    │  ├── AppBlockEnforcer       (process monitor)   │
-    //    │  └── UsbBlockEnforcer       (registry USBSTOR)  │
-    //    └────────────────────────────────────────────────┘
     let mut engine = EnforcementEngine::new();
     engine.register(std::sync::Arc::new(WebsiteFilterEnforcer::new()));
     engine.register(std::sync::Arc::new(AppBlockEnforcer::new()));
     engine.register(std::sync::Arc::new(UsbBlockEnforcer::new()));
-    info!("enforcement engine ready: website_filter | app_block | usb_block");
+    engine.register(std::sync::Arc::new(FocusModeEnforcer::new()));
+    let engine = std::sync::Arc::new(engine);
+    info!("enforcement engine ready: website_filter | app_block | usb_block | focus_mode");
 
-    // 5. Build the shared agent context.
-    let ctx = AgentContext::new(cfg);
+    // 5. Initialize Storage Engine
+    let data_dir = std::path::Path::new(&cfg.storage.data_dir);
+    std::fs::create_dir_all(data_dir).context("failed to create storage data_dir")?;
+    let enc_key = get_or_create_storage_key(data_dir)?;
+    let storage = std::sync::Arc::new(
+        veyonix_storage::StorageEngine::open(&data_dir.join("veyonix_db"), enc_key)
+            .context("failed to open storage engine")?,
+    );
+    info!(data_dir = %data_dir.display(), "encrypted storage engine loaded");
 
-    // 6. Spawn a task that rolls back all enforcers on clean shutdown.
+    // 6. Build the shared agent context.
+    let ctx = AgentContext::new(cfg.clone());
+
+    // 7. Spawn a task that rolls back all enforcers on clean shutdown.
+    let engine_clone = engine.clone();
     let mut shutdown_rx = ctx.shutdown_receiver();
     tokio::spawn(async move {
         let _ = shutdown_rx.recv().await;
         info!("enforcement engine: rolling back all active restrictions");
-        engine.rollback_all().await;
+        engine_clone.rollback_all().await;
     });
 
-    // 7. Run the main agent loop (blocks until Ctrl-C or shutdown signal).
+    // 8. Spawn the Agent Orchestrator to run all background sync/web socket loops
+    let orchestrator = orchestrator::AgentOrchestrator::new(cfg, storage, engine)?;
+    let shutdown_rx_orchestrator = ctx.shutdown_receiver();
+    tokio::spawn(async move {
+        if let Err(e) = orchestrator.run(shutdown_rx_orchestrator).await {
+            error!(error = %e, "agent orchestrator loop exited with error");
+        }
+    });
+
+    // 9. Run the main agent loop (blocks until Ctrl-C or shutdown signal).
     ctx.run()
         .await
         .context("agent run-loop exited with an error")?;
 
     info!("veyonix-agent exiting");
     Ok(())
+}
+
+/// Helper to get or generate the database encryption key.
+fn get_or_create_storage_key(data_dir: &std::path::Path) -> Result<[u8; 32]> {
+    let key_path = data_dir.join("storage.key");
+    if key_path.exists() {
+        let key_bytes = std::fs::read(&key_path)
+            .context("failed to read storage encryption key")?;
+        if key_bytes.len() != 32 {
+            anyhow::bail!("invalid storage key length: expected 32 bytes");
+        }
+        let mut key = [0u8; 32];
+        key.copy_from_slice(&key_bytes);
+        Ok(key)
+    } else {
+        use rand::RngCore;
+        let mut key = [0u8; 32];
+        rand::thread_rng().fill_bytes(&mut key);
+        std::fs::write(&key_path, &key)
+            .context("failed to write storage encryption key")?;
+        Ok(key)
+    }
 }
 
 /// `install` subcommand — service installation (stub).

@@ -28,6 +28,11 @@ veyonix-enforcement = { path = "../enforcement" }
 veyonix-enforcement-website = { path = "../enforcement-website" }
 veyonix-enforcement-app = { path = "../enforcement-app" }
 veyonix-enforcement-usb = { path = "../enforcement-usb" }
+veyonix-enforcement-focus = { path = "../enforcement-focus" }
+sysinfo = { workspace = true }
+rand = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
 
 [target.'cfg(windows)'.dependencies]
 windows-service = "0.7"

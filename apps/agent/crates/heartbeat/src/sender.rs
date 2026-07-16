@@ -9,6 +9,7 @@ pub enum HeartbeatError {
     Network(#[from] NetworkError),
 }
 
+#[derive(Clone)]
 pub struct HeartbeatSender {
     api: Arc<ApiClient>,
     device_id: String,
