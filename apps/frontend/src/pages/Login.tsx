@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Mail, Lock, AlertCircle } from 'lucide-react';
-import { Button } from '../components/Button';
-import { loginUser } from '../services/api';
+import { Shield, AlertCircle, Loader2 } from 'lucide-react';
 
 export function Login() {
   const navigate = useNavigate();
@@ -17,79 +15,69 @@ export function Login() {
     setIsLoading(true);
 
     try {
-      // Try PostgreSQL backend login first
-      const response = await loginUser({ email, password });
-      
-      if (response.success) {
-        // Login successful, navigate to dashboard
-        navigate('/dashboard');
-      }
-    } catch (backendError) {
-      // If backend is not available, fall back to demo login silently
-      if (email === 'admin@projectalpha.com' && password === 'admin123') {
-        // Store demo user data
-        localStorage.setItem('authToken', 'demo-token');
-        localStorage.setItem('user', JSON.stringify({
-          id: 1,
-          firstName: 'Admin',
-          lastName: 'User',
-          email: 'admin@projectalpha.com',
-          organization: 'Demo Organization',
-          role: 'admin'
-        }));
+      const response = await fetch('http://localhost:8080/api/v1/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      const token = data.token || (data.data && data.data.accessToken);
+
+      if (response.ok && token) {
+        localStorage.setItem('token', token);
         navigate('/dashboard');
       } else {
-        setError('Invalid email or password');
+        setError(data.message || data.error || data.detail || 'Invalid credentials');
       }
+    } catch (err) {
+      setError('Failed to connect to the server');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-dark-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Branding */}
-        <div className="text-center mb-8 animate-fade-in">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-dark-850 border border-dark-600 rounded-lg mb-4 transition-all duration-300 hover:bg-dark-800">
-            <Shield size={32} className="text-text-secondary" />
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-900 border border-slate-800 rounded-2xl mb-6 shadow-2xl">
+            <Shield size={32} className="text-indigo-500" />
           </div>
-          <h1 className="text-text-primary mb-2">Project Alpha</h1>
-          <p className="text-text-tertiary">Digital Behavior Control System</p>
+          <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Veyonix</h1>
+          <p className="text-slate-400 font-medium">Welcome back, please sign in</p>
         </div>
 
         {/* Login Card */}
-        <div className="bg-dark-900 border border-dark-700 rounded-lg p-8">
-          <div className="mb-6">
-            <h2 className="text-text-primary mb-1">Sign In</h2>
-            <p className="text-text-tertiary">Enter your credentials to access the system</p>
-          </div>
-
+        <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-8 shadow-2xl">
           {error && (
-            <div className="mb-4 p-3 bg-error-900/30 border border-error-700 rounded-md flex items-start gap-2 animate-shake">
-              <AlertCircle size={18} className="text-error-400 mt-0.5 flex-shrink-0" />
-              <p className="text-error-300 text-sm">{error}</p>
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3">
+              <AlertCircle size={20} className="text-red-400 mt-0.5 flex-shrink-0" />
+              <p className="text-red-300 text-sm font-medium">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="email" className="block text-text-secondary text-sm font-medium mb-2">
-                Email
+              <label htmlFor="email" className="block text-slate-300 text-sm font-medium mb-2">
+                Email Address
               </label>
               <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2.5 bg-dark-850 border border-dark-600 text-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 hover:border-dark-500 placeholder-text-disabled"
-                placeholder="Enter email"
+                className="w-full px-4 py-3 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all placeholder:text-slate-600"
+                placeholder="name@company.com"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-text-secondary text-sm font-medium mb-2">
+              <label htmlFor="password" className="block text-slate-300 text-sm font-medium mb-2">
                 Password
               </label>
               <input
@@ -97,52 +85,27 @@ export function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2.5 bg-dark-850 border border-dark-600 text-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 hover:border-dark-500 placeholder-text-disabled"
-                placeholder="Enter password"
+                className="w-full px-4 py-3 bg-slate-950 border border-slate-800 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all placeholder:text-slate-600"
+                placeholder="••••••••"
                 required
               />
             </div>
 
-            <Button
+            <button
               type="submit"
-              variant="primary"
-              size="lg"
-              className="w-full mt-6"
               disabled={isLoading}
+              className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 mt-8 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/25"
             >
-              <Lock size={18} />
-              {isLoading ? 'Authenticating...' : 'Sign In'}
-            </Button>
+              {isLoading ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" />
+                  Authenticating...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </button>
           </form>
-
-          {/* Register Link */}
-          <div className="mt-4 text-center">
-            <p className="text-text-tertiary text-sm">
-              Don't have an account?{' '}
-              <button
-                type="button"
-                onClick={() => navigate('/register')}
-                className="text-primary-400 hover:text-primary-300 transition-colors"
-              >
-                Create new account
-              </button>
-            </p>
-          </div>
-
-          <div className="mt-6 pt-6 border-t border-dark-700">
-            <div className="flex items-center gap-2 text-text-tertiary text-sm">
-              <Lock size={14} />
-              <small>Secure authentication required</small>
-            </div>
-          </div>
-        </div>
-
-        {/* Demo credentials */}
-        <div className="mt-4 p-4 bg-dark-900 border border-dark-700 rounded-md">
-          <p className="text-text-tertiary text-sm mb-2">Demo Credentials:</p>
-          <div className="space-y-1 font-mono text-sm">
-            <p className="text-text-secondary">Admin: admin@projectalpha.com / admin123</p>
-          </div>
         </div>
       </div>
     </div>
