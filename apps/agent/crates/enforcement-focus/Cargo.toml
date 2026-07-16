@@ -1,0 +1,16 @@
+[package]
+name = "veyonix-enforcement-focus"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+chrono.workspace = true
+async-trait = "0.1"
+veyonix-enforcement = { path = "../enforcement" }
+veyonix-enforcement-website = { path = "../enforcement-website" }
+veyonix-enforcement-app     = { path = "../enforcement-app" }

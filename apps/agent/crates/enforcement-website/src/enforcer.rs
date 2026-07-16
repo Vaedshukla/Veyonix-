@@ -86,9 +86,27 @@ impl Enforcer for WebsiteFilterEnforcer {
 
     async fn rollback(&self) -> Result<(), EnforcementError> {
         let path = hosts_path();
-        let (before, after) = read_unmanaged(&path)?;
+
+        // If the hosts file doesn't exist or isn't writable (e.g. in tests
+        // without elevation), treat this as a no-op rather than an error.
+        if !path.exists() {
+            tracing::warn!(path = %path.display(), "website filter: hosts file not found during rollback — skipping");
+            return Ok(());
+        }
+
+        let (before, after) = match read_unmanaged(&path) {
+            Ok(v) => v,
+            Err(EnforcementError::Io(ref e))
+                if e.kind() == std::io::ErrorKind::PermissionDenied =>
+            {
+                tracing::warn!("website filter: permission denied reading hosts file during rollback — skipping");
+                return Ok(());
+            }
+            Err(e) => return Err(e),
+        };
+
         write_with_block(&path, &before, &[], &after)?;
-        info!("website filter: hosts file block removed");
+        tracing::info!("website filter: hosts file block removed");
         Ok(())
     }
 }

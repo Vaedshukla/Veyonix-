@@ -15,6 +15,10 @@ const MANAGED_END: &str = "# --- VEYONIX-MANAGED END ---";
 
 /// Return the platform-specific path to the OS hosts file.
 pub fn hosts_path() -> PathBuf {
+    if let Ok(test_path) = std::env::var("VEYONIX_TEST_HOSTS_PATH") {
+        return PathBuf::from(test_path);
+    }
+
     #[cfg(windows)]
     {
         let windir = std::env::var("SystemRoot").unwrap_or_else(|_| "C:\\Windows".into());

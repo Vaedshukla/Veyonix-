@@ -18,6 +18,7 @@ members = [
   "crates/enforcement-website",
   "crates/enforcement-app",
   "crates/enforcement-usb",
+  "crates/enforcement-focus",
 ]
 
 [workspace.package]
@@ -79,3 +80,4 @@ veyonix-enforcement = { path = "crates/enforcement" }
 veyonix-enforcement-website = { path = "crates/enforcement-website" }
 veyonix-enforcement-app = { path = "crates/enforcement-app" }
 veyonix-enforcement-usb = { path = "crates/enforcement-usb" }
+veyonix-enforcement-focus = { path = "crates/enforcement-focus" }
