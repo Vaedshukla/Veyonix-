@@ -26,15 +26,17 @@ export async function registerRoutes(app: FastifyInstance): Promise<void> {
   // ── API v1 routes ────────────────────────────────────────────────────
   await app.register(
     async (v1) => {
-      await v1.register(authRoutes, { prefix: '/auth' });
-      await v1.register(userRoutes, { prefix: '/users' });
+      // Legacy routes disabled in favor of Identity module v2
+      // await v1.register(authRoutes, { prefix: '/auth' });
+      // await v1.register(userRoutes, { prefix: '/users' });
 
-      // await v1.register(deviceRoutes, { prefix: '/devices' });
-      await v1.register(agentRoutes, { prefix: '/agent' });
+      // Legacy agent routes disabled in favor of Devices v2
+      // await v1.register(agentRoutes, { prefix: '/agent' });
       await v1.register(policyRoutes, { prefix: '/policies' });
       await v1.register(notificationRoutes, { prefix: '/notifications' });
       await v1.register(analyticsRoutes, { prefix: '/analytics' });
-      await v1.register(reportRoutes, { prefix: '/reports' });
+      // Legacy report routes disabled
+      // await v1.register(reportRoutes, { prefix: '/reports' });
     },
     { prefix: API_V1_PREFIX },
   );

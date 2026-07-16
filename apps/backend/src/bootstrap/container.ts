@@ -207,16 +207,41 @@ export async function registerContainer(app: FastifyInstance): Promise<void> {
     reportsController: asClass(ReportsController).singleton(),
 
     // ── Identity: Repositories ───────────────────────────────────────
-    identityUserRepository: asClass(PrismaUserRepository).singleton(),
-    identitySessionRepository: asClass(PrismaSessionRepository).singleton(),
-    identityRefreshTokenRepository: asClass(PrismaRefreshTokenRepository).singleton(),
-    identityRoleRepository: asClass(PrismaRoleRepository).singleton(),
+    identityUserRepository: asClass(PrismaUserRepository).classic().singleton(),
+    identitySessionRepository: asClass(PrismaSessionRepository).classic().singleton(),
+    identityRefreshTokenRepository: asClass(PrismaRefreshTokenRepository).classic().singleton(),
+    identityRoleRepository: asClass(PrismaRoleRepository).classic().singleton(),
+
+    // Use Case Aliases for Clean Architecture Resolution
+    userRepository: asClass(PrismaUserRepository).classic().singleton(),
+    sessionRepository: asClass(PrismaSessionRepository).classic().singleton(),
+    refreshTokenRepository: asClass(PrismaRefreshTokenRepository).classic().singleton(),
+    roleRepository: asClass(PrismaRoleRepository).classic().singleton(),
+    tokenService: asFunction((dependencies: { env: typeof env }) => {
+      return new JwtTokenService({
+        accessSecret: dependencies.env.JWT_ACCESS_SECRET,
+        accessTtlSeconds: dependencies.env.JWT_ACCESS_TTL,
+        refreshSecret: dependencies.env.JWT_REFRESH_SECRET,
+      });
+    }).singleton(),
+    config: asValue({
+      jwtAccessTtlSeconds: 900,
+      jwtRefreshTtlSeconds: 2592000,
+      rememberMeTtlSeconds: 7776000,
+      resetTokenTtlSeconds: 3600,
+    }),
 
     // ── Identity: Services ──────────────────────────────────────────
     passwordHasher: asClass(Argon2PasswordHasher).singleton(),
-    jwtTokenService: asClass(JwtTokenService).singleton(),
-    sessionCache: asClass(RedisSessionCache).singleton(),
-    auditLogger: asClass(PrismaAuditLogPublisher).singleton(),
+    jwtTokenService: asFunction((dependencies: { env: typeof env }) => {
+      return new JwtTokenService({
+        accessSecret: dependencies.env.JWT_ACCESS_SECRET,
+        accessTtlSeconds: dependencies.env.JWT_ACCESS_TTL,
+        refreshSecret: dependencies.env.JWT_REFRESH_SECRET,
+      });
+    }).singleton(),
+    sessionCache: asClass(RedisSessionCache).classic().singleton(),
+    auditLogger: asClass(PrismaAuditLogPublisher).classic().singleton(),
 
     // ── Identity: Use Cases ─────────────────────────────────────────
     registerUserUseCase: asClass(RegisterUserUseCase).singleton(),
@@ -233,9 +258,9 @@ export async function registerContainer(app: FastifyInstance): Promise<void> {
     identityUsersController: asClass(IdentityUsersController).singleton(),
 
     // ── Organizations: Repositories ─────────────────────────────────
-    tenantRepository: asClass(PrismaTenantRepository).singleton(),
-    organizationRepository: asClass(PrismaOrganizationRepository).singleton(),
-    membershipRepository: asClass(PrismaMembershipRepository).singleton(),
+    tenantRepository: asClass(PrismaTenantRepository).classic().singleton(),
+    organizationRepository: asClass(PrismaOrganizationRepository).classic().singleton(),
+    membershipRepository: asClass(PrismaMembershipRepository).classic().singleton(),
 
     // ── Organizations: Use Cases ─────────────────────────────────────
     createOrganizationUseCase: asClass(CreateOrganizationUseCase).singleton(),
@@ -248,9 +273,9 @@ export async function registerContainer(app: FastifyInstance): Promise<void> {
     organizationsV2Controller: asClass(OrganizationsV2Controller).singleton(),
 
     // ── Devices Module ───────────────────────────────────────────────
-    deviceRepository: asClass(PrismaDeviceRepository).singleton(),
-    deviceAssignmentRepository: asClass(PrismaDeviceAssignmentRepository).singleton(),
-    enrollmentTokenRepository: asClass(PrismaEnrollmentTokenRepository).singleton(),
+    deviceRepository: asClass(PrismaDeviceRepository).classic().singleton(),
+    deviceAssignmentRepository: asClass(PrismaDeviceAssignmentRepository).classic().singleton(),
+    enrollmentTokenRepository: asClass(PrismaEnrollmentTokenRepository).classic().singleton(),
     agentApiController: asClass(AgentApiController).singleton(),
     adminDevicesController: asClass(AdminDevicesController).singleton(),
     requireDeviceAuth: asFunction(requireDeviceAuth).singleton(),
