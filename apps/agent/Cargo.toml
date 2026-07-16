@@ -14,6 +14,9 @@ members = [
   "crates/telemetry",
   "crates/heartbeat",
   "crates/scheduler",
+  "crates/enforcement",
+  "crates/enforcement-website",
+  "crates/enforcement-app",
 ]
 
 [workspace.package]
@@ -54,6 +57,8 @@ clap = { version = "4", features = ["derive"] }
 tokio-tungstenite = { version = "0.24", features = ["rustls-tls-native-roots"] }
 futures-util = "0.3"
 tokio-cron-scheduler = "0.11"
+async-trait = "0.1"
+sysinfo = "0.32"
 
 # Internal crate cross-references
 veyonix-logging = { path = "crates/logging" }
@@ -68,3 +73,6 @@ veyonix-commands = { path = "crates/commands" }
 veyonix-telemetry = { path = "crates/telemetry" }
 veyonix-heartbeat = { path = "crates/heartbeat" }
 veyonix-scheduler = { path = "crates/scheduler" }
+veyonix-enforcement = { path = "crates/enforcement" }
+veyonix-enforcement-website = { path = "crates/enforcement-website" }
+veyonix-enforcement-app = { path = "crates/enforcement-app" }

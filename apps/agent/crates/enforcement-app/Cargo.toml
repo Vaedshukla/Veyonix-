@@ -1,0 +1,17 @@
+[package]
+name = "veyonix-enforcement-app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+async-trait = "0.1"
+veyonix-enforcement = { path = "../enforcement" }
+
+[target.'cfg(windows)'.dependencies]
+# For reading process names on Windows
+sysinfo = "0.32"
