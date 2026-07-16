@@ -24,6 +24,10 @@ veyonix-commands = { path = "../commands" }
 veyonix-telemetry = { path = "../telemetry" }
 veyonix-heartbeat = { path = "../heartbeat" }
 veyonix-scheduler = { path = "../scheduler" }
+veyonix-enforcement = { path = "../enforcement" }
+veyonix-enforcement-website = { path = "../enforcement-website" }
+veyonix-enforcement-app = { path = "../enforcement-app" }
+veyonix-enforcement-usb = { path = "../enforcement-usb" }
 
 [target.'cfg(windows)'.dependencies]
 windows-service = "0.7"

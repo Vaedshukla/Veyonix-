@@ -21,6 +21,10 @@ use tracing::info;
 use veyonix_config as config;
 use veyonix_core::AgentContext;
 use veyonix_logging as logging;
+use veyonix_enforcement::EnforcementEngine;
+use veyonix_enforcement_website::WebsiteFilterEnforcer;
+use veyonix_enforcement_app::AppBlockEnforcer;
+use veyonix_enforcement_usb::UsbBlockEnforcer;
 
 // ─── Version ─────────────────────────────────────────────────────────────────
 
@@ -88,20 +92,17 @@ async fn cmd_run(args: RunArgs) -> Result<()> {
         return service::run_as_service(args);
     }
 
-    // 1. Load configuration (defaults → optional file → env vars).
+    // 1. Load configuration.
     let cfg = config::load(args.config.as_deref())
         .context("failed to load agent configuration")?;
 
-    // 2. Build a `LogConfig` from the resolved config and initialise logging.
-    //    The returned guard must be kept alive for the duration of the process
-    //    so the background flushing thread doesn't exit prematurely.
+    // 2. Initialise logging.
     let log_config = logging::LogConfig {
         level: cfg.logging.level.clone(),
         log_dir: cfg.logging.log_dir.clone().into(),
         max_file_size_mb: cfg.logging.max_file_size_mb,
         json_output: cfg.logging.json_output,
     };
-
     let _log_guard = logging::init(&log_config)
         .context("failed to initialise logging")?;
 
@@ -114,9 +115,32 @@ async fn cmd_run(args: RunArgs) -> Result<()> {
         "configuration loaded successfully"
     );
 
-    // 4. Build the shared agent context and run the main loop.
+    // 4. Build and register all enforcement modules.
+    //
+    //    ┌────────────────────────────────────────────────┐
+    //    │  EnforcementEngine                              │
+    //    │  ├── WebsiteFilterEnforcer  (hosts file)        │
+    //    │  ├── AppBlockEnforcer       (process monitor)   │
+    //    │  └── UsbBlockEnforcer       (registry USBSTOR)  │
+    //    └────────────────────────────────────────────────┘
+    let mut engine = EnforcementEngine::new();
+    engine.register(std::sync::Arc::new(WebsiteFilterEnforcer::new()));
+    engine.register(std::sync::Arc::new(AppBlockEnforcer::new()));
+    engine.register(std::sync::Arc::new(UsbBlockEnforcer::new()));
+    info!("enforcement engine ready: website_filter | app_block | usb_block");
+
+    // 5. Build the shared agent context.
     let ctx = AgentContext::new(cfg);
 
+    // 6. Spawn a task that rolls back all enforcers on clean shutdown.
+    let mut shutdown_rx = ctx.shutdown_receiver();
+    tokio::spawn(async move {
+        let _ = shutdown_rx.recv().await;
+        info!("enforcement engine: rolling back all active restrictions");
+        engine.rollback_all().await;
+    });
+
+    // 7. Run the main agent loop (blocks until Ctrl-C or shutdown signal).
     ctx.run()
         .await
         .context("agent run-loop exited with an error")?;
