@@ -62,12 +62,16 @@ pub struct AuthResponse {
 // ---------------------------------------------------------------------------
 
 /// Body sent to `POST /api/v1/agent/heartbeat`.
-#[derive(Debug, Serialize)]
-pub struct HeartbeatRequest<'a> {
-    pub device_id: &'a str,
-    pub status: &'a str,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub policy_hash: Option<&'a str>,
+#[derive(Debug, serde::Serialize)]
+pub struct HeartbeatRequest {
+    #[serde(rename = "cpuPercent")]
+    pub cpu_percent: Option<f32>,
+    #[serde(rename = "memoryMb")]
+    pub memory_mb: Option<f64>,
+    #[serde(rename = "diskFreeGb")]
+    pub disk_free_gb: Option<f64>,
+    #[serde(rename = "activeProcesses")]
+    pub active_processes: Option<Vec<String>>,
 }
 
 // ---------------------------------------------------------------------------

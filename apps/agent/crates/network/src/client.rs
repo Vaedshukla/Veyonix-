@@ -204,19 +204,11 @@ impl ApiClient {
     /// Send a heartbeat to the management server.
     ///
     /// `POST /api/v1/agent/heartbeat`
-    #[instrument(skip(self), fields(device_id, status))]
+    #[instrument(skip(self, body))]
     pub async fn heartbeat(
         &self,
-        device_id: &str,
-        status: &str,
-        policy_hash: Option<&str>,
+        body: &HeartbeatRequest,
     ) -> Result<(), NetworkError> {
-        let body = HeartbeatRequest {
-            device_id,
-            status,
-            policy_hash,
-        };
-
         let url = format!("{}/api/v1/agent/heartbeat", self.base_url);
         let headers = self.auth_headers().await;
         debug!(url = %url, "POST heartbeat");
@@ -225,7 +217,7 @@ impl ApiClient {
             .client
             .post(&url)
             .headers(headers)
-            .json(&body)
+            .json(body)
             .send()
             .await
             .map_err(NetworkError::Transport)?;

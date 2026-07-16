@@ -13,3 +13,4 @@ uuid.workspace = true
 chrono.workspace = true
 veyonix-storage = { path = "../storage" }
 veyonix-network = { path = "../network" }
+sysinfo = { workspace = true }
