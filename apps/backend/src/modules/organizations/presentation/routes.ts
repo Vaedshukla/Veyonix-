@@ -71,4 +71,13 @@ export async function registerOrganizationRoutes(
     },
     (req, reply) => deps.organizationsController.listMembers(req as never, reply),
   );
+
+  fastify.get(
+    '/api/v1/organizations/:id/dashboard-stats',
+    {
+      preHandler: [authenticate],
+      schema: { tags: ['Organizations'], summary: 'Get real-time dashboard statistics for an organization' },
+    },
+    (req, reply) => deps.organizationsController.getDashboardStats(req as never, reply),
+  );
 }

@@ -120,4 +120,69 @@ export class OrganizationsController {
     const results = await this.deps.listOrganizationMembersUseCase.execute(dto);
     reply.status(200).send({ success: true, data: results });
   }
+
+  async getDashboardStats(
+    request: FastifyRequest<{ Params: { id: string } }>,
+    reply: FastifyReply,
+  ): Promise<void> {
+    if (!request.user) {
+      return reply
+        .status(401)
+        .send({ success: false, error: { code: 'UNAUTHORIZED', message: 'Not authenticated.' } });
+    }
+
+    const { id: orgId } = request.params;
+    const prisma = (this.deps as any).prisma;
+
+    // 1. Get total and active devices
+    const devices = await prisma.device.findMany({
+      where: { organizationId: orgId, deletedAt: null },
+      select: {
+        id: true,
+        hostname: true,
+        status: true,
+        lastSeenAt: true,
+      }
+    });
+
+    const totalDevices = devices.length;
+    const activeDevices = devices.filter((d: any) => d.status === 'ACTIVE' || d.status === 'ONLINE').length;
+
+    // 2. Query recent activities/logs
+    const auditLogs = await prisma.auditLog.findMany({
+      where: { organizationId: orgId },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
+
+    // 3. Block counters calculated dynamically
+    const blockedActions = auditLogs.filter((log: any) => log.action === 'SESSION_REVOKED' || log.action === 'LOGIN_FAILED').length;
+    const policyViolations = auditLogs.filter((log: any) => log.severity === 'CRITICAL' || log.severity === 'WARNING').length;
+
+    reply.status(200).send({
+      success: true,
+      data: {
+        stats: {
+          activeAgents: activeDevices,
+          policyViolations,
+          blockedActions,
+          totalMonitored: totalDevices,
+        },
+        devices: devices.map((d: any) => ({
+          id: d.id,
+          name: d.hostname,
+          status: d.status.toLowerCase(),
+          lastSeen: d.lastSeenAt ? d.lastSeenAt.toISOString() : null,
+        })),
+        recentActivity: auditLogs.map((log: any) => ({
+          id: log.id,
+          timestamp: log.createdAt.toISOString(),
+          device: log.ipAddress || 'SYSTEM',
+          action: log.action,
+          category: log.severity === 'CRITICAL' ? 'blocked' : log.severity === 'WARNING' ? 'warned' : 'allowed',
+          details: `${log.action} severity ${log.severity}: ${JSON.stringify(log.details || {})}`
+        }))
+      }
+    });
+  }
 }

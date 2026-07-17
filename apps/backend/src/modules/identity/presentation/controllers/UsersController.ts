@@ -31,6 +31,7 @@ export class IdentityUsersController {
         lastName: user.lastName,
         isEmailVerified: user.isEmailVerified,
         lastLoginAt: user.lastLoginAt?.toISOString() ?? null,
+        organizationId: request.user.organizationId,
         permissions,
       },
     });

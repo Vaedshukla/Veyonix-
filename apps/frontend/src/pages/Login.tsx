@@ -28,6 +28,24 @@ export function Login() {
 
       if (response.ok && token) {
         localStorage.setItem('token', token);
+
+        // Fetch user profile to capture organizationId for org-scoped API calls
+        try {
+          const meRes = await fetch('http://localhost:8080/api/v1/users/me', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (meRes.ok) {
+            const meData = await meRes.json();
+            const profile = meData.data || meData;
+            if (profile.organizationId) {
+              localStorage.setItem('orgId', profile.organizationId);
+            }
+            localStorage.setItem('user', JSON.stringify(profile));
+          }
+        } catch {
+          // Non-critical: dashboard will fall back gracefully
+        }
+
         navigate('/dashboard');
       } else {
         setError(data.message || data.error || data.detail || 'Invalid credentials');
