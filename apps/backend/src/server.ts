@@ -4,6 +4,7 @@
  * This file boots the Fastify application and starts listening.
  * It handles graceful shutdown on SIGTERM/SIGINT.
  */
+import 'dotenv/config'; // Load .env before any config is parsed
 import pino from 'pino';
 
 import { env } from '@config/index';
@@ -56,7 +57,12 @@ void bootstrap().then(() => {
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason: unknown) => {
-  logger.fatal({ reason }, 'Unhandled Promise Rejection — shutting down');
+  console.error('Unhandled Promise Rejection:', reason);
+  if (reason instanceof Error) {
+    logger.fatal({ err: reason }, `Unhandled Promise Rejection: ${reason.message} — shutting down`);
+  } else {
+    logger.fatal({ reason }, 'Unhandled Promise Rejection — shutting down');
+  }
   process.exit(1);
 });
 

@@ -30,6 +30,8 @@ export interface LoginUserDeps {
   passwordHasher: IPasswordHasher;
   tokenService: ITokenService;
   auditLogger: IAuditLogger;
+  // Optional prisma client for direct org membership lookup
+  prisma?: { organizationMembership: { findFirst: (args: any) => Promise<any> } };
   config: {
     jwtRefreshTtlSeconds: number;
     rememberMeTtlSeconds: number;
@@ -120,8 +122,19 @@ export class LoginUserUseCase {
     });
     const savedSession = await this.deps.sessionRepository.create(session);
 
-    // 9. Generate Access Token
-    const orgId = this.deps.config.organizationId ?? 'unknown';
+    // 9. Resolve the user's primary organization ID from membership table
+    let orgId = this.deps.config.organizationId ?? '';
+    if ((!orgId || orgId === 'unknown') && this.deps.prisma) {
+      try {
+        const membership = await this.deps.prisma.organizationMembership.findFirst({
+          where: { userId: user.id },
+          select: { organizationId: true },
+        });
+        if (membership?.organizationId) orgId = membership.organizationId;
+      } catch {
+        // Non-fatal: orgId will remain empty
+      }
+    }
     const accessToken = this.deps.tokenService.generateAccessToken({
       sub: user.id,
       sessionId: savedSession.id,
