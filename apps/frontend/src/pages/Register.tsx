@@ -1,38 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, User, Mail, Lock, Building, AlertCircle, CheckCircle } from 'lucide-react';
+import { Shield, User, Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 
 interface FormData {
-  firstName: string;
-  lastName: string;
+  username: string;
+  fullName: string;
   email: string;
   password: string;
   confirmPassword: string;
-  organization: string;
   role: 'admin' | 'parent' | 'teacher';
 }
 
 interface FormErrors {
-  firstName?: string;
-  lastName?: string;
+  username?: string;
+  fullName?: string;
   email?: string;
   password?: string;
   confirmPassword?: string;
-  organization?: string;
   general?: string;
 }
 
 export function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
-    firstName: '',
-    lastName: '',
+    username: '',
+    fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
-    organization: '',
     role: 'admin',
   });
   const [errors, setErrors] = useState<FormErrors>({});
@@ -42,14 +39,14 @@ export function Register() {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    // First name validation
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
+    // Username validation
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
     }
 
-    // Last name validation
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
+    // Full name validation
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
     }
 
     // Email validation
@@ -74,11 +71,6 @@ export function Register() {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    // Organization validation
-    if (!formData.organization.trim()) {
-      newErrors.organization = 'Organization name is required';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -96,19 +88,18 @@ export function Register() {
 
     try {
       // API call to your PostgreSQL backend
-      const response = await fetch('http://localhost:3001/api/users/register', {
+      const response = await fetch('http://localhost:3000/api/register', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
+          username: formData.username,
           email: formData.email,
           password: formData.password,
-          organization: formData.organization,
-          role: formData.role,
-        }),
+          fullName: formData.fullName,
+          role: formData.role
+        })
       });
 
       const data = await response.json();
@@ -121,12 +112,11 @@ export function Register() {
       
       // Clear form
       setFormData({
-        firstName: '',
-        lastName: '',
+        username: '',
+        fullName: '',
         email: '',
         password: '',
         confirmPassword: '',
-        organization: '',
         role: 'admin',
       });
 
@@ -198,45 +188,45 @@ export function Register() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-text-secondary text-sm mb-2">
-                  First Name *
+                  Username *
                 </label>
                 <div className="relative">
                   <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary" />
                   <input
                     type="text"
-                    name="firstName"
-                    value={formData.firstName}
+                    name="username"
+                    value={formData.username}
                     onChange={handleChange}
                     className={`w-full bg-dark-800 border ${
-                      errors.firstName ? 'border-error-500' : 'border-dark-600'
+                      errors.username ? 'border-error-500' : 'border-dark-600'
                     } rounded-md px-10 py-2.5 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-primary-500 transition-colors`}
-                    placeholder="Enter first name"
+                    placeholder="Enter username"
                   />
                 </div>
-                {errors.firstName && (
-                  <p className="mt-1 text-sm text-error-400">{errors.firstName}</p>
+                {errors.username && (
+                  <p className="mt-1 text-sm text-error-400">{errors.username}</p>
                 )}
               </div>
 
               <div>
                 <label className="block text-text-secondary text-sm mb-2">
-                  Last Name *
+                  Full Name *
                 </label>
                 <div className="relative">
                   <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary" />
                   <input
                     type="text"
-                    name="lastName"
-                    value={formData.lastName}
+                    name="fullName"
+                    value={formData.fullName}
                     onChange={handleChange}
                     className={`w-full bg-dark-800 border ${
-                      errors.lastName ? 'border-error-500' : 'border-dark-600'
+                      errors.fullName ? 'border-error-500' : 'border-dark-600'
                     } rounded-md px-10 py-2.5 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-primary-500 transition-colors`}
-                    placeholder="Enter last name"
+                    placeholder="Enter full name"
                   />
                 </div>
-                {errors.lastName && (
-                  <p className="mt-1 text-sm text-error-400">{errors.lastName}</p>
+                {errors.fullName && (
+                  <p className="mt-1 text-sm text-error-400">{errors.fullName}</p>
                 )}
               </div>
             </div>
@@ -261,29 +251,6 @@ export function Register() {
               </div>
               {errors.email && (
                 <p className="mt-1 text-sm text-error-400">{errors.email}</p>
-              )}
-            </div>
-
-            {/* Organization */}
-            <div>
-              <label className="block text-text-secondary text-sm mb-2">
-                Organization *
-              </label>
-              <div className="relative">
-                <Building size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary" />
-                <input
-                  type="text"
-                  name="organization"
-                  value={formData.organization}
-                  onChange={handleChange}
-                  className={`w-full bg-dark-800 border ${
-                    errors.organization ? 'border-error-500' : 'border-dark-600'
-                  } rounded-md px-10 py-2.5 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-primary-500 transition-colors`}
-                  placeholder="School or Organization Name"
-                />
-              </div>
-              {errors.organization && (
-                <p className="mt-1 text-sm text-error-400">{errors.organization}</p>
               )}
             </div>
 
